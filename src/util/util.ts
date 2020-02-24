@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Jimp = require('jimp');
-import {NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
 import * as jwt from 'jsonwebtoken';
 import {config} from "../config/config";
 

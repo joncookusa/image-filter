@@ -12,9 +12,8 @@ import {filterImageFromURL, deleteLocalFiles, requireAuth} from './util/util';
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
-  app.use(requireAuth);
 
-  app.get("/filterImageFromURL/",
+  app.get("/filterImageFromURL/", requireAuth,
       async (req, res) => {
 
         let {image_url} = req.query;
