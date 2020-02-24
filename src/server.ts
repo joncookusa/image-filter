@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {filterImageFromURL, deleteLocalFiles, requireAuth} from './util/util';
 
 (async () => {
 
@@ -12,23 +12,28 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
+  app.use(requireAuth);
 
-  app.get( "/filterImageFromURL/", async ( req, res ) => {
+  app.get("/filterImageFromURL/",
+      async (req, res) => {
 
-    let { image_url } = req.query;
+        let {image_url} = req.query;
 
-    if ( !image_url ) {
-      return res.status(400)
-          .send(`image url is required`);
-    }
+        if (!image_url) {
+          return res.status(400)
+              .send(`image url is required`);
+        }
 
-    try {
-      let local_path = await filterImageFromURL(image_url);
-      return res.status(200).sendFile(local_path, () => {deleteLocalFiles([local_path])});
-    } catch (e) {
-      return res.status(500).send(e);
-    }
-  } );
+        try {
+          let local_path = await filterImageFromURL(image_url);
+          return res.status(200).sendFile(local_path, () => {
+            deleteLocalFiles([local_path])
+          });
+        } catch (e) {
+          return res.status(500).send(e);
+        }
+      }
+  );
   
   // Root Endpoint
   // Displays a simple message to the user
