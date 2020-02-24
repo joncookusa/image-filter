@@ -1,5 +1,8 @@
 import fs from 'fs';
 import Jimp = require('jimp');
+import {NextFunction} from "express";
+import * as jwt from 'jsonwebtoken';
+import {config} from "../config/config";
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -9,16 +12,20 @@ import Jimp = require('jimp');
 // RETURNS
 //    an absolute path to a filtered image locally saved file
 export async function filterImageFromURL(inputURL: string): Promise<string>{
-    return new Promise( async resolve => {
-        const photo = await Jimp.read(inputURL);
-        const outpath = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
-        await photo
-        .resize(256, 256) // resize
-        .quality(60) // set JPEG quality
-        .greyscale() // set greyscale
-        .write(__dirname+outpath, (img)=>{
-            resolve(__dirname+outpath);
-        });
+    return new Promise( async (resolve, reject) => {
+        try {
+            const photo = await Jimp.read(inputURL);
+            const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
+            await photo
+                .resize(256, 256) // resize
+                .quality(60) // set JPEG quality
+                .greyscale() // set greyscale
+                .write(__dirname + outpath, (img) => {
+                    resolve(__dirname + outpath);
+                });
+        } catch (e) {
+            reject('Error processing image');
+        }
     });
 }
 
@@ -31,4 +38,25 @@ export async function deleteLocalFiles(files:Array<string>){
     for( let file of files) {
         fs.unlinkSync(file);
     }
+}
+
+// requireAuth
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
+    if (!req.headers || !req.headers.authorization) {
+        return res.status(401).send({message: 'No authorization headers'});
+    }
+
+    const token_bearer = req.headers.authorization.split(' ');
+    if (token_bearer.length !== 2){
+        return res.status(401).send({message: 'Malformed token.'});
+    }
+
+    const token = token_bearer[1];
+
+    return jwt.verify(token, config.jwt.secret, (err, decoded) => {
+        if (err) {
+            return res.status(500).send({message: 'Failed to authenticate.'});
+        }
+        return next();
+    });
 }
