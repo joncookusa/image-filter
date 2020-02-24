@@ -40,19 +40,24 @@ export async function deleteLocalFiles(files:Array<string>){
     }
 }
 
-// requireAuth
+// Middleware to check for a valid web token
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
+
+    // If there's no headers or no authorization header, return a 401 response
     if (!req.headers || !req.headers.authorization) {
         return res.status(401).send({message: 'No authorization headers'});
     }
 
+    // If the authorization is not in the format 'Bearer vdewdeuwdew....', return a 401 response
     const token_bearer = req.headers.authorization.split(' ');
     if (token_bearer.length !== 2){
         return res.status(401).send({message: 'Malformed token.'});
     }
 
+    // Grab the token
     const token = token_bearer[1];
 
+    // Verify the token be way on the configuration environment jwt secret. If it's not valid, send a 500 error, otherwise continue
     return jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
             return res.status(500).send({message: 'Failed to authenticate.'});

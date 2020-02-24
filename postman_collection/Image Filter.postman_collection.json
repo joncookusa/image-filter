@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "57f48b06-796f-4047-a3f9-c6c55ae11386",
+		"name": "Image Filter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET / Image Filter",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gQ29vayIsImlhdCI6MTUxNjIzOTAyMn0.bp7nQ5Wi1CxfC-NmyfGIAUR7awMW1U8OmTZNAH-Q8bQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://image-filter-dev.us-east-1.elasticbeanstalk.com/filterImageFromURL?image_url=https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Flying_Scotsman_in_Doncaster.JPG/1200px-Flying_Scotsman_in_Doncaster1.JPG",
+					"protocol": "http",
+					"host": [
+						"image-filter-dev",
+						"us-east-1",
+						"elasticbeanstalk",
+						"com"
+					],
+					"path": [
+						"filterImageFromURL"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Flying_Scotsman_in_Doncaster.JPG/1200px-Flying_Scotsman_in_Doncaster1.JPG"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

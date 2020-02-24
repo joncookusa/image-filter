@@ -1,48 +1,57 @@
-# Udagram Image Filtering Microservice
+# Image Filtering Microservice
 
-Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
+### Functionality
 
-The project is split into three parts:
-1. [The Simple Frontend](https://github.com/udacity/cloud-developer/tree/master/course-02/exercises/udacity-c2-frontend)
-A basic Ionic client web application which consumes the RestAPI Backend. [Covered in the course]
-2. [The RestAPI Backend](https://github.com/udacity/cloud-developer/tree/master/course-02/exercises/udacity-c2-restapi), a Node-Express server which can be deployed to a cloud service. [Covered in the course]
-3. [The Image Filtering Microservice](https://github.com/udacity/cloud-developer/tree/master/course-02/project/image-filter-starter-code), the final project for the course. It is a Node-Express application which runs a simple script to process images. [Your assignment]
+This project is a service that contains an endpoint which accepts a URL that includes a query parameter referencing a publicly
+available image. The service will take the image and process it into black and white and resize it to 256px x 256px.
 
-## Tasks
+### Installing
 
-### Setup Node Environment
+To install the Microservice, you will need to ensure that git is installed on your computer. If you don't have git, follow the instructions at...
 
-You'll need to create a new node server. Open a new terminal within the project directory and run:
+    https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
-1. Initialize a new project: `npm i`
-2. run the development server with `npm run dev`
+Once git is installed, open a command line or terminal window and navigate to a folder where you want to install the project. Then clone the project by entering...
 
-### Create a new endpoint in the server.ts file
+    https://github.com/joncookusa/image-filter.git
 
-The starter code has a task for you to complete an endpoint in `./src/server.ts` which uses query parameter to download an image from a public URL, filter the image, and return the result.
+Once the project has been copied to your install folder, run ...
 
-We've included a few helper functions to handle some of these concepts and we're importing it for you at the top of the `./src/server.ts`  file.
+    npm install
+    
+You will also need to configure an environment variable for the web token. On a MAC, this can be done by entering ...
 
-```typescript
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
-```
+    export SECRET=MyS3cret
+    
+... and then run ...
 
-### Deploying your system
+    npm run dev
+    
+... to start the server locally. 
 
-Follow the process described in the course to `eb init` a new application and `eb create` a new environment to deploy your image-filter service! Don't forget you can use `eb deploy` to push changes.
+### Postman Requests
 
-## Stand Out (Optional)
+Once the server is running, you can try out the microservice by sending a request to ...
 
-### Refactor the course RESTapi
+    http://localhost:8082/filterImageFromURL?image_url=[PUBLIC IMAGE URL]
+    
+IMPORTANT: Public requests have been prohibited which was done as a part of a learning exercise on how to use
+web tokens. Therefore, included in your request headers, you will need to send the following web token in the AUTHORIZATION
+header.
+    
+    AUTHORIZATION : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gQ29vayIsImlhdCI6MTUxNjIzOTAyMn0.bp7nQ5Wi1CxfC-NmyfGIAUR7awMW1U8OmTZNAH-Q8bQ
+    
+Sending the request should return your filtered image in the body of the response.
 
-If you're feeling up to it, refactor the course RESTapi to make a request to your newly provisioned image server.
+### Dependencies
 
-### Authentication
+The microservice is built using Node / NPM with Express.
 
-Prevent requests without valid authentication headers.
-> !!NOTE if you choose to submit this, make sure to add the token to the postman collection and export the postman collection file to your submission so we can review!
+### Credits
 
-### Custom Domain Name
+The starter code was provided by Udacity as a learning project to show how to use Express endpoints, and the use of web tokens
+along with deployment to AWS Elastic Beanstalk. Code for the requireAuth web token auth check was largely lifted
+straight from the accompanying course material.
+    
 
-Add your own domain name and have it point to the running services (try adding a subdomain name to point to the processing server)
-> !NOTE: Domain names are not included in AWS’ free tier and will incur a cost.
+
